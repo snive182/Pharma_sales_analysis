@@ -1,0 +1,64 @@
+
+📊 DAX Summary for Pharmacy Sales Dashboard
+
+1. Total Sales
+DAX: Total Sales = SUM('Sheet1'[total_sales])
+Purpose: Calculates overall sales across all categories.
+Use Case: KPI card for total revenue.
+
+2. Previous Sales
+DAX: Previous Sales = CALCULATE([Total Sales], DATEADD('Sheet1'[datum], -1, MONTH))
+Purpose: Gets sales from the previous month (or year if YEAR used).
+Use Case: Used as baseline for growth calculations.
+
+3. Sales Growth %
+DAX: Sales Growth % = DIVIDE([Total Sales] - [Previous Sales], [Previous Sales])
+Purpose: Shows growth or decline compared to previous period.
+Use Case: KPI card to track performance (e.g., +20% vs last month).
+
+4. Avg Weekly Sales
+DAX:
+Avg Weekly Sales =
+AVERAGEX(
+    SUMMARIZE('Sheet1', 'Sheet1'[Year], 'Sheet1'[week_number], "WeeklySales", SUM('Sheet1'[total_sales])),
+    [WeeklySales]
+)
+Purpose: Average sales per week.
+Use Case: Identifies stable vs seasonal sales (good for loyalty programs).
+
+5. Weekly Sales Variability
+DAX:
+Weekly Sales Variability =
+STDEVX.P(
+    SUMMARIZE('Sheet1', 'Sheet1'[Year], 'Sheet1'[week_number], "WeeklySales", SUM('Sheet1'[total_sales])),
+    [WeeklySales]
+)
+Purpose: Checks weekly sales fluctuation.
+Use Case: Stable sales = repeat purchase → loyalty potential.
+
+6. Category Contribution %
+DAX: Category Contribution % = DIVIDE([Category Sales], [Total Sales], 0)
+Purpose: Each category’s % contribution to total sales.
+Use Case: Donut chart to highlight dominant vs weak categories.
+
+7. Weekday Name (if missing)
+DAX: Weekday Name = FORMAT('Sheet1'[datum], "dddd")
+Purpose: Extract weekday from date.
+Use Case: Sales by Weekday chart → campaign timing.
+
+8. Weekday Sort
+DAX:
+Weekday Sort =
+SWITCH(
+    'Sheet1'[Weekday Name],
+    "Monday", 1,
+    "Tuesday", 2,
+    "Wednesday", 3,
+    "Thursday", 4,
+    "Friday", 5,
+    "Saturday", 6,
+    "Sunday", 7,
+    8
+)
+Purpose: Ensures correct weekday order (Mon → Sun).
+Use Case: Easier to read weekday charts.
